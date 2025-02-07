@@ -21,6 +21,10 @@
     $similarStudents =  $listSimilarStudents->fetchAll();;
     
     $similarIds = explode(",",$similarStudents['duplicate_ids']);
+    $similarIds = [35025,35060,35780,35805,35988,36022,36227,36434,36463,36654];
+    $similarIds = array_filter($similarIds, function ($element){
+        return $element !== $_GET['ids'];
+    });
     $showDupes = count($similarIds);
     array_unshift($similarIds, $_GET['ids']);
     $listProperties->execute(array(sprintf(",%s,", implode(",", $similarIds))));

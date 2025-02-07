@@ -30,7 +30,7 @@ function createworker(){
 }
 
 //get (8, 125 ids) batches and then create workers
-getbatches(credentials,8,125).then(() => createworker());
+getbatches(credentials,8,1024).then(() => createworker());
 
 
 /* original

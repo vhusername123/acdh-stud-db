@@ -51,6 +51,8 @@
                         require_once __DIR__ . '/src/search.php';
                     elseif (isset($_GET['id'])):
                         require_once __DIR__ . '/src/show.php';
+                    elseif (isset($_GET['ids'])):
+                        require_once __DIR__ . '/src/show2.php';
                     else:
                         require_once __DIR__ . '/src/form.php';
                     endif

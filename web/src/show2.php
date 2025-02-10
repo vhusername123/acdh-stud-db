@@ -19,12 +19,9 @@
     );
     $listSimilarStudents->execute(array($_GET['ids']));
     $similarStudents =  $listSimilarStudents->fetchAll();;
+    $similarStudents = "35025,35060,35780,35805,35988,36022,36227,36434,36463,36654";
+    $similarIds = explode(",",$similarStudents);
     
-    $similarIds = explode(",",$similarStudents['duplicate_ids']);
-    $similarIds = [35025,35060,35780,35805,35988,36022,36227,36434,36463,36654];
-    $similarIds = array_filter($similarIds, function ($element){
-        return $element !== $_GET['ids'];
-    });
     $showDupes = count($similarIds);
     array_unshift($similarIds, $_GET['ids']);
     $listProperties->execute(array(sprintf(",%s,", implode(",", $similarIds))));
@@ -95,7 +92,7 @@
         <?php foreach ($similarIds as $index => $record): ?>
             <li>
                 <input type="checkbox" checked="checked" data-dupe-id="<?php out(chr(98 + $index))?>" onclick="showhidetoggle(this)" />
-                <a class=<?php out(chr(98 + $index))?> href="?id=<?php out($record['other_id']) ?>"><?php out(chr(66 + $index)) ?></a>: <?php out(sprintf('%.0f%%', 100 * $record['weighted_mean'])) ?>
+                <a class=<?php out(chr(98 + $index))?> href="?id=<?php out($record['other_id']) ?>"><?php out(chr(66 + $index)) ?></a>: <?php out(sprintf('%.0f%%',0)) ?>
                 
             </li>
         <?php endforeach ?>

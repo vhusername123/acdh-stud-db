@@ -38,20 +38,24 @@ class DateRange{
         calculations.sort((a,b) => a-b)
         return this.millisecondsindays(calculations[1]*-1)
     }
-    getLength():number{
+    getLength(){
         return this.lengthindays
+    }
+    overlappercentage(overlap:number){
+        const a = this.getLength()
+        return  a<overlap ? a / overlap: overlap / a
     }
     rangeddisparity(otherrange:DateRange){
         const aLength = this.getLength()
         const bLength = otherrange.getLength()
         return aLength<bLength ? aLength/bLength : bLength/aLength
     }
-    
+
 }
 
 
 let firstguy = new DateRange(new Date("01.01.1900"),new Date("1900.12.30"))
-let secondguy = new DateRange(new Date("01.01.1901"),new Date("1901.12.30"))
+let secondguy = new DateRange(new Date("01.01.1900"),new Date("1901.12.30"))
 
 
-console.log(firstguy.rangeddisparity(secondguy))
+console.log(secondguy.overlappercentage(secondguy.overlap(firstguy)))

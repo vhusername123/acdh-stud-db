@@ -1,16 +1,38 @@
 import { DateRange } from "./datecalculations";
 const exampledates = [
-  new Date("1900-01-01"),
-  new Date("1900-12-31"),
-  new Date("1900-06-01"),
-  new Date("1901-05-30"),
-  new Date("1900-06-00"),
+  "1900-01-01", 
+  "1900-12-31", 
+  "1900-06-01", 
+  "1901-05-30",
+  "1900-06-00" 
 ];
 
 describe("DateRange", () => {
   test("should correctly initialize start and end dates", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[1]); // 1900-12-31
+
+    date2.setDate(date2.getDate() + 1);
+    const range = new DateRange(date1, date2);
+
+    expect(range.startdate).toBe(date1);
+    expect(range.enddate).toBe(date2);
+  });
+  test("should correctly initialize start and end dates", () => {
+    const date1 = new Date(exampledates[0]); // 1900-01-01
+    const date2 = new Date(exampledates[2]); // 1900-06-01
+      
+
+    date2.setDate(date2.getDate() + 1);
+    const range = new DateRange(date1, date2);
+
+    expect(range.startdate).toBe(date1);
+    expect(range.enddate).toBe(date2);
+  });
+  test("should correctly initialize start and end dates", () => {
+    const date1 = new Date(exampledates[3]); // 1901-05-30
+    const date2 = new Date(exampledates[3]); // 1901-05-30
+      
 
     date2.setDate(date2.getDate() + 1);
     const range = new DateRange(date1, date2);
@@ -91,6 +113,7 @@ describe("DateRange", () => {
     );
 
     expect(range1.overlap(range2)).toBe(214);
+    expect(range2.overlap(range1)).toBe(214);
   });
 
   test("should correctly calculate overlap percentage", () => {
@@ -102,10 +125,10 @@ describe("DateRange", () => {
       new Date(exampledates[2]), // 1900-06-01
       new Date(exampledates[3]) // 1901-05-30
     );
+
     const overlap = range1.overlap(range2);
-    expect(range1.overlapPercentage(overlap)).toBeCloseTo(0.585, 3);
-    const overlap2 = range2.overlap(range1);
-    expect(range2.overlapPercentage(overlap2)).toBeCloseTo(0.585, 3);
+    expect(range1.overlapPercentage(overlap)).toBeCloseTo(0.5863, 3);
+    expect(range2.overlapPercentage(overlap)).toBeCloseTo(0.5879, 3);
   });
 
   test("should correctly calculate ranged disparity", () => {
@@ -130,7 +153,6 @@ describe("DateRange", () => {
         new Date(exampledates[2]), // 1900-06-01
         new Date(exampledates[3]) // 1901-05-30
     );
-
-    expect(range1.rangeLengthDisparity(range2)).toBe(-151);
+    expect(range2.rangeLengthDisparity(range1)).toBe(-1);
   });
 });

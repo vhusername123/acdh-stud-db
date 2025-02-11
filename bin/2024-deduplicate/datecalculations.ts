@@ -1,4 +1,4 @@
-class DateRange{
+export class DateRange{
     startdate: Date
     enddate: Date
     lengthindays: number
@@ -41,21 +41,12 @@ class DateRange{
     getLength(){
         return this.lengthindays
     }
-    overlappercentage(overlap:number){
+    overlapPercentage(overlap:number){
         const a = this.getLength()
         return  a<overlap ? a / overlap: overlap / a
     }
-    rangeddisparity(otherrange:DateRange){
-        const aLength = this.getLength()
-        const bLength = otherrange.getLength()
-        return aLength<bLength ? aLength/bLength : bLength/aLength
+    rangeLengthDisparity(otherrange:DateRange){
+        return this.getLength() - otherrange.getLength()
     }
 
 }
-
-
-let firstguy = new DateRange(new Date("01.01.1900"),new Date("1900.12.30"))
-let secondguy = new DateRange(new Date("01.01.1900"),new Date("1901.12.30"))
-
-
-console.log(secondguy.overlappercentage(secondguy.overlap(firstguy)))

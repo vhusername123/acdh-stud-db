@@ -16,11 +16,10 @@ function runService(workerData: [number[], {}], path: string) {
 }
 
 //function to start workers in sequence
-export async function run(
+export function promiseWorker(
   workerData: number[],
   credentials: {},
   workerpath: string
 ) {
-  const result = await runService([workerData, credentials], workerpath);
-  console.log(result);
+  return runService([workerData, credentials], workerpath);
 }

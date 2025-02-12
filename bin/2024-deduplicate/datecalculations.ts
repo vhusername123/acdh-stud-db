@@ -1,7 +1,7 @@
 export class DateRange {
-  startdate: Date;
-  enddate: Date;
-  lengthindays: number;
+  private readonly startdate: Date;
+  private readonly enddate: Date;
+  private readonly lengthindays: number;
   constructor(date1: Date, date2: Date) {
     if (date1.getTime() > date2.getTime()) {
       this.startdate = new Date(date2);
@@ -52,5 +52,11 @@ export class DateRange {
   }
   rangeLengthDisparity(otherrange: DateRange) {
     return this.getLength() - otherrange.getLength();
+  }
+  getStartDate() {
+    return new Date(this.startdate);
+  }
+  getEndDate() {
+    return new Date(this.enddate);
   }
 }

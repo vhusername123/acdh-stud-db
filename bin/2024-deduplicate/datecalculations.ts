@@ -1,4 +1,5 @@
 export class DateRange {
+  private millisecondsPerDay = 1000 * 60 * 60 * 24;
   private constructor(
     private readonly startdate: Date,
     private readonly enddate: Date,
@@ -27,9 +28,6 @@ export class DateRange {
     return (end.getTime() - start.getTime()) / millisecondsPerDay;
   }
 
-  millisecondsindays(milliseconds: number) {
-    return milliseconds / 1000 / 60 / 60 / 24;
-  }
   hasOverlap(otherrange: DateRange) {
     return !(
       this.enddate <= otherrange.startdate ||
@@ -45,14 +43,14 @@ export class DateRange {
         otherrange.enddate.getTime() - this.startdate.getTime(),
       ];
       calculations.sort((a, b) => a - b);
-      return this.millisecondsindays(calculations[0]);
+      return calculations[0] / this.millisecondsPerDay;
     }
     let calculations: number[] = [
       this.startdate.getTime() - otherrange.enddate.getTime(),
       otherrange.startdate.getTime() - this.enddate.getTime(),
     ];
     calculations.sort((a, b) => a - b);
-    return this.millisecondsindays(calculations[1] * -1);
+    return (calculations[1] * -1) / this.millisecondsPerDay;
   }
   getLength() {
     return this.lengthindays;

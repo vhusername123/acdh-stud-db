@@ -57,7 +57,7 @@ describe("DateRange", () => {
 
     expect(range).toBeInstanceOf(DateRange);
     expect(range.getStartDate().getUTCDate()).toBe(30);
-    expect(NaN).toBe(date2.getUTCDate());
+    expect(range.getEndDate().getUTCDate()).toBeNaN();
   });
 
   test("calculate length in days", () => {

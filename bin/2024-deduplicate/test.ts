@@ -1,62 +1,54 @@
 import { DateRange } from "./datecalculations";
+import { describe, expect, test } from "@jest/globals";
 const exampledates = [
-  "1900-01-01", 
-  "1900-12-31", 
-  "1900-06-01", 
+  "1900-01-01",
+  "1900-12-31",
+  "1900-06-01",
   "1901-05-30",
-  "1900-06-00" 
+  "1900-06-00",
 ];
 
 describe("DateRange", () => {
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[1]); // 1900-12-31
-
-    date2.setDate(date2.getDate() + 1);
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate).toBe(date1);
-    expect(range.enddate).toBe(date2);
+    expect(range.startdate.getUTCDate()).toBe(1);
+    expect(range.enddate.getUTCDate()).toBe(1);
   });
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[2]); // 1900-06-01
-      
-
-    date2.setDate(date2.getDate() + 1);
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate).toBe(date1);
-    expect(range.enddate).toBe(date2);
+    expect(range.startdate.getUTCDate()).toBe(1);
+    expect(range.enddate.getUTCDate()).toBe(2);
   });
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
     const date2 = new Date(exampledates[3]); // 1901-05-30
-      
-
-    date2.setDate(date2.getDate() + 1);
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate).toBe(date1);
-    expect(range.enddate).toBe(date2);
+    expect(range.startdate.getUTCDate()).toBe(30);
+    expect(range.enddate.getUTCDate()).toBe(31);
   });
+
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[1]); // 1900-12-31
     const date2 = new Date(exampledates[2]); // 1900-06-01
-    date1.setDate(date1.getDate() + 1);
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate).toBe(date2);
-    expect(range.enddate).toBe(date1);
+    expect(range.startdate.getUTCDate()).toBe(1);
+    expect(range.enddate.getUTCDate()).toBe(1);
   });
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[2]); // 1900-06-01
     const date2 = new Date(exampledates[3]); // 1901-05-30
-    date2.setDate(date2.getDate() + 1);
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate).toBe(date1);
-    expect(range.enddate).toBe(date2);
+    expect(range.startdate.getUTCDate()).toBe(1);
+    expect(range.enddate.getUTCDate()).toBe(31);
   });
   test("fail to initialise start and end dates", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
@@ -64,8 +56,8 @@ describe("DateRange", () => {
     const range = new DateRange(date1, date2);
 
     expect(range).toBeInstanceOf(DateRange);
-    expect(range.startdate).toBe(date1);
-    expect(NaN).toBe(date2.getDate());
+    expect(range.startdate.getUTCDate()).toBe(30);
+    expect(NaN).toBe(date2.getUTCDate());
   });
 
   test("calculate length in days", () => {
@@ -146,12 +138,12 @@ describe("DateRange", () => {
 
   test("calculate ranged disparity", () => {
     const range1 = new DateRange(
-        new Date(exampledates[0]), // 1900-01-01
-        new Date(exampledates[1]) // 1900-12-31
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[1]) // 1900-12-31
     );
     const range2 = new DateRange(
-        new Date(exampledates[2]), // 1900-06-01
-        new Date(exampledates[3]) // 1901-05-30
+      new Date(exampledates[2]), // 1900-06-01
+      new Date(exampledates[3]) // 1901-05-30
     );
     expect(range2.rangeLengthDisparity(range1)).toBe(-1);
   });

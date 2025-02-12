@@ -1,4 +1,4 @@
-import { DateRange } from "./datecalculations";
+import { DateRange } from "./DateRange";
 import { describe, expect, test } from "@jest/globals";
 const exampledates = [
   "1900-01-01",

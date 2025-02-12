@@ -1,17 +1,11 @@
-const privateconstructerkey = Symbol();
 export class DateRange {
   private readonly millisecondsPerDay = 1000 * 60 * 60 * 24;
 
   private constructor(
     private readonly startdate: Date,
     private readonly enddate: Date,
-    private readonly lengthindays: number,
-    constructerkey: Symbol
-  ) {
-    if (constructerkey !== privateconstructerkey) {
-      throw new Error("Use DateRange.create() to create a new DateRange.");
-    }
-  }
+    private readonly lengthindays: number
+  ) {}
 
   static create(date1: Date, date2: Date) {
     if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
@@ -26,8 +20,7 @@ export class DateRange {
     return new DateRange(
       start,
       end,
-      DateRange.calculateLengthInDays(start, end),
-      privateconstructerkey
+      DateRange.calculateLengthInDays(start, end)
     );
   }
 
@@ -52,6 +45,7 @@ export class DateRange {
       this.startdate >= otherrange.enddate
     );
   }
+
   overlap(otherrange: DateRange) {
     if (!this.hasOverlap(otherrange)) {
       throw new Error("Ranges do not overlap.");
@@ -64,6 +58,7 @@ export class DateRange {
       this.enddate < otherrange.enddate ? this.enddate : otherrange.enddate;
     return DateRange.calculateLengthInDays(start, end);
   }
+
   overlapAsDateRange(otherrange: DateRange) {
     if (!this.hasOverlap(otherrange)) {
       throw new Error("Ranges do not overlap.");
@@ -77,14 +72,15 @@ export class DateRange {
     return new DateRange(
       start,
       end,
-      DateRange.calculateLengthInDays(start, end),
-      privateconstructerkey
+      DateRange.calculateLengthInDays(start, end)
     );
   }
+
   overlapPercentage(overlap: number) {
     const a = this.getLength();
     return a < overlap ? a / overlap : overlap / a;
   }
+
   rangeLengthDisparity(otherrange: DateRange) {
     return this.getLength() - otherrange.getLength();
   }

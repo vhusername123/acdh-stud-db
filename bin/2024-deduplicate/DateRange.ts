@@ -1,10 +1,17 @@
+const privateconstructerkey = Symbol();
 export class DateRange {
   private readonly millisecondsPerDay = 1000 * 60 * 60 * 24;
+
   private constructor(
     private readonly startdate: Date,
     private readonly enddate: Date,
-    private readonly lengthindays: number
-  ) {}
+    private readonly lengthindays: number,
+    constructerkey: Symbol
+  ) {
+    if (constructerkey !== privateconstructerkey) {
+      throw new Error("Use DateRange.create() to create a new DateRange.");
+    }
+  }
 
   static create(date1: Date, date2: Date) {
     if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
@@ -19,7 +26,8 @@ export class DateRange {
     return new DateRange(
       start,
       end,
-      DateRange.calculateLengthInDays(start, end)
+      DateRange.calculateLengthInDays(start, end),
+      privateconstructerkey
     );
   }
 

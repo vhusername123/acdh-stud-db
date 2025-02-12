@@ -14,24 +14,24 @@ describe("DateRange", () => {
     const date2 = new Date(exampledates[1]); // 1900-12-31
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate.getUTCDate()).toBe(1);
-    expect(range.enddate.getUTCDate()).toBe(1);
+    expect(range.getStartDate().getUTCDate()).toBe(1);
+    expect(range.getEndDate().getUTCDate()).toBe(1);
   });
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[2]); // 1900-06-01
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate.getUTCDate()).toBe(1);
-    expect(range.enddate.getUTCDate()).toBe(2);
+    expect(range.getStartDate().getUTCDate()).toBe(1);
+    expect(range.getEndDate().getUTCDate()).toBe(2);
   });
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
     const date2 = new Date(exampledates[3]); // 1901-05-30
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate.getUTCDate()).toBe(30);
-    expect(range.enddate.getUTCDate()).toBe(31);
+    expect(range.getStartDate().getUTCDate()).toBe(30);
+    expect(range.getEndDate().getUTCDate()).toBe(31);
   });
 
   test("initialize start and end dates", () => {
@@ -39,16 +39,16 @@ describe("DateRange", () => {
     const date2 = new Date(exampledates[2]); // 1900-06-01
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate.getUTCDate()).toBe(1);
-    expect(range.enddate.getUTCDate()).toBe(1);
+    expect(range.getStartDate().getUTCDate()).toBe(1);
+    expect(range.getEndDate().getUTCDate()).toBe(1);
   });
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[2]); // 1900-06-01
     const date2 = new Date(exampledates[3]); // 1901-05-30
     const range = new DateRange(date1, date2);
 
-    expect(range.startdate.getUTCDate()).toBe(1);
-    expect(range.enddate.getUTCDate()).toBe(31);
+    expect(range.getStartDate().getUTCDate()).toBe(1);
+    expect(range.getEndDate().getUTCDate()).toBe(31);
   });
   test("fail to initialise start and end dates", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
@@ -56,7 +56,7 @@ describe("DateRange", () => {
     const range = new DateRange(date1, date2);
 
     expect(range).toBeInstanceOf(DateRange);
-    expect(range.startdate.getUTCDate()).toBe(30);
+    expect(range.getStartDate().getUTCDate()).toBe(30);
     expect(NaN).toBe(date2.getUTCDate());
   });
 
@@ -65,7 +65,7 @@ describe("DateRange", () => {
     const date2 = new Date(exampledates[1]); // 1900-12-31
     const range = new DateRange(date1, date2);
 
-    expect(range.lengthindays).toBe(365);
+    expect(range.getLength()).toBe(365);
   });
 
   test("identify overlapping ranges", () => {

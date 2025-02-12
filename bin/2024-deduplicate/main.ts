@@ -1,14 +1,6 @@
-import { createConnection } from "mariadb";
-import { computeStats, reducePropertyRecordsToPeople } from "./process";
 import { getbatches } from "./createbatches";
 import fs from "node:fs";
 import { run } from "./mainWorker";
-import {
-  getHighestAvailableIds,
-  findBatchIds,
-  loadBatchOfPropertyRecords,
-  writeComparisonBatch,
-} from "./database";
 const path = "ids.json";
 const workerpath = "./worker.js";
 const credentials = {

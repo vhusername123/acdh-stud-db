@@ -53,22 +53,33 @@ export class DateRange {
     );
   }
   overlap(otherrange: DateRange) {
-    if (this.hasOverlap(otherrange)) {
-      let calculations: number[] = [
-        this.enddate.getTime() - this.startdate.getTime(),
-        this.enddate.getTime() - otherrange.startdate.getTime(),
-        otherrange.enddate.getTime() - otherrange.startdate.getTime(),
-        otherrange.enddate.getTime() - this.startdate.getTime(),
-      ];
-      calculations.sort((a, b) => a - b);
-      return calculations[0] / this.millisecondsPerDay;
+    if (!this.hasOverlap(otherrange)) {
+      throw new Error("Ranges do not overlap.");
     }
-    let calculations: number[] = [
-      this.startdate.getTime() - otherrange.enddate.getTime(),
-      otherrange.startdate.getTime() - this.enddate.getTime(),
-    ];
-    calculations.sort((a, b) => a - b);
-    return (calculations[1] * -1) / this.millisecondsPerDay;
+    const start =
+      this.startdate > otherrange.startdate
+        ? this.startdate
+        : otherrange.startdate;
+    const end =
+      this.enddate < otherrange.enddate ? this.enddate : otherrange.enddate;
+    return DateRange.calculateLengthInDays(start, end);
+  }
+  overlapAsDateRange(otherrange: DateRange) {
+    if (!this.hasOverlap(otherrange)) {
+      throw new Error("Ranges do not overlap.");
+    }
+    const start =
+      this.startdate > otherrange.startdate
+        ? this.startdate
+        : otherrange.startdate;
+    const end =
+      this.enddate < otherrange.enddate ? this.enddate : otherrange.enddate;
+    return new DateRange(
+      start,
+      end,
+      DateRange.calculateLengthInDays(start, end),
+      privateconstructerkey
+    );
   }
   overlapPercentage(overlap: number) {
     const a = this.getLength();

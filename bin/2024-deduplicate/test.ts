@@ -12,7 +12,7 @@ describe("DateRange", () => {
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[1]); // 1900-12-31
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range.getStartDate().getUTCDate()).toBe(1);
     expect(range.getEndDate().getUTCDate()).toBe(1);
@@ -20,7 +20,7 @@ describe("DateRange", () => {
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[2]); // 1900-06-01
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range.getStartDate().getUTCDate()).toBe(1);
     expect(range.getEndDate().getUTCDate()).toBe(2);
@@ -28,7 +28,7 @@ describe("DateRange", () => {
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
     const date2 = new Date(exampledates[3]); // 1901-05-30
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range.getStartDate().getUTCDate()).toBe(30);
     expect(range.getEndDate().getUTCDate()).toBe(31);
@@ -37,7 +37,7 @@ describe("DateRange", () => {
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[1]); // 1900-12-31
     const date2 = new Date(exampledates[2]); // 1900-06-01
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range.getStartDate().getUTCDate()).toBe(1);
     expect(range.getEndDate().getUTCDate()).toBe(1);
@@ -45,7 +45,7 @@ describe("DateRange", () => {
   test("initialize start and end dates", () => {
     const date1 = new Date(exampledates[2]); // 1900-06-01
     const date2 = new Date(exampledates[3]); // 1901-05-30
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range.getStartDate().getUTCDate()).toBe(1);
     expect(range.getEndDate().getUTCDate()).toBe(31);
@@ -53,7 +53,7 @@ describe("DateRange", () => {
   test("fail to initialise start and end dates", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
     const date2 = new Date(exampledates[4]); // 1900-06-00
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range).toBeInstanceOf(DateRange);
     expect(range.getStartDate().getUTCDate()).toBe(30);
@@ -63,17 +63,17 @@ describe("DateRange", () => {
   test("calculate length in days", () => {
     const date1 = new Date(exampledates[0]); // 1900-01-01
     const date2 = new Date(exampledates[1]); // 1900-12-31
-    const range = new DateRange(date1, date2);
+    const range = DateRange.create(date1, date2);
 
     expect(range.getLength()).toBe(365);
   });
 
   test("identify overlapping ranges", () => {
-    const range1 = new DateRange(
+    const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
     );
-    const range2 = new DateRange(
+    const range2 = DateRange.create(
       new Date(exampledates[2]), // 1900-06-01
       new Date(exampledates[3]) // 1901-05-30
     );
@@ -82,11 +82,11 @@ describe("DateRange", () => {
   });
 
   test("identify non-overlapping ranges", () => {
-    const range1 = new DateRange(
+    const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[2]) // 1900-06-01
     );
-    const range2 = new DateRange(
+    const range2 = DateRange.create(
       new Date(exampledates[3]), // 1901-05-30
       new Date(exampledates[3]) // 1901-05-30
     );
@@ -95,11 +95,11 @@ describe("DateRange", () => {
   });
 
   test("calculate overlap in days", () => {
-    const range1 = new DateRange(
+    const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
     );
-    const range2 = new DateRange(
+    const range2 = DateRange.create(
       new Date(exampledates[2]), // 1900-06-01
       new Date(exampledates[3]) // 1901-05-30
     );
@@ -109,11 +109,11 @@ describe("DateRange", () => {
   });
 
   test("calculate overlap percentage", () => {
-    const range1 = new DateRange(
+    const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
     );
-    const range2 = new DateRange(
+    const range2 = DateRange.create(
       new Date(exampledates[2]), // 1900-06-01
       new Date(exampledates[3]) // 1901-05-30
     );
@@ -124,11 +124,11 @@ describe("DateRange", () => {
   });
 
   test("calculate ranged disparity", () => {
-    const range1 = new DateRange(
+    const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
     );
-    const range2 = new DateRange(
+    const range2 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
     );
@@ -137,11 +137,11 @@ describe("DateRange", () => {
   });
 
   test("calculate ranged disparity", () => {
-    const range1 = new DateRange(
+    const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
     );
-    const range2 = new DateRange(
+    const range2 = DateRange.create(
       new Date(exampledates[2]), // 1900-06-01
       new Date(exampledates[3]) // 1901-05-30
     );

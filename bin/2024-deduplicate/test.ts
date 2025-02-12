@@ -54,7 +54,6 @@ describe("DateRange", () => {
     const date1 = new Date(exampledates[3]); // 1901-05-30
     const date2 = new Date(exampledates[4]); // 1900-06-00
     const range = DateRange.create(date1, date2);
-
     expect(range).toBeInstanceOf(DateRange);
     expect(range.getStartDate().getUTCDate()).toBe(30);
     expect(range.getEndDate().getUTCDate()).toBeNaN();
@@ -146,5 +145,35 @@ describe("DateRange", () => {
       new Date(exampledates[3]) // 1901-05-30
     );
     expect(range2.rangeLengthDisparity(range1)).toBe(-1);
+  });
+
+  test("successfully create new DateRange from overlapping ranges", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[1]) // 1900-12-31
+    );
+    const range2 = DateRange.create(
+      new Date(exampledates[2]), // 1900-06-01
+      new Date(exampledates[3]) // 1901-05-30
+    );
+    const overlap = range1.overlapAsDateRange(range2);
+    expect(overlap.getStartDate().getUTCMilliseconds()).toBe(
+      new Date("1900-06-01").getUTCMilliseconds()
+    );
+    expect(overlap.getEndDate().getUTCMilliseconds()).toBe(
+      new Date("1901-01-01").getUTCMilliseconds()
+    );
+  });
+
+  test("fail to create new DateRange from non-overlapping ranges", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[2]) // 1900-06-01
+    );
+    const range2 = DateRange.create(
+      new Date(exampledates[3]), // 1901-05-30
+      new Date(exampledates[3]) // 1901-05-30
+    );
+    expect(() => range1.overlapAsDateRange(range2)).toThrow();
   });
 });

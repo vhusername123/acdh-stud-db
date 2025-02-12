@@ -1,21 +1,32 @@
 export class DateRange {
-  private readonly startdate: Date;
-  private readonly enddate: Date;
-  private readonly lengthindays: number;
-  constructor(date1: Date, date2: Date) {
-    if (date1.getTime() > date2.getTime()) {
-      this.startdate = new Date(date2);
-      this.enddate = new Date(date1);
-      this.enddate.setDate(this.enddate.getDate() + 1);
-    } else {
-      this.startdate = new Date(date1);
-      this.enddate = new Date(date2);
-      this.enddate.setDate(this.enddate.getDate() + 1);
+  private constructor(
+    private readonly startdate: Date,
+    private readonly enddate: Date,
+    private readonly lengthindays: number
+  ) {}
+
+  static create(date1: Date, date2: Date) {
+    if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
+      throw new Error("Invalid date(s) provided.");
     }
-    this.lengthindays = this.millisecondsindays(
-      this.enddate.getTime() - this.startdate.getTime()
+
+    const start =
+      date1.getTime() > date2.getTime() ? new Date(date2) : new Date(date1);
+    const end =
+      date1.getTime() > date2.getTime() ? new Date(date1) : new Date(date2);
+    end.setDate(end.getDate() + 1);
+    return new DateRange(
+      start,
+      end,
+      DateRange.calculatelengthindaysDays(start, end)
     );
   }
+
+  private static calculatelengthindaysDays(start: Date, end: Date): number {
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    return (end.getTime() - start.getTime()) / millisecondsPerDay;
+  }
+
   millisecondsindays(milliseconds: number) {
     return milliseconds / 1000 / 60 / 60 / 24;
   }

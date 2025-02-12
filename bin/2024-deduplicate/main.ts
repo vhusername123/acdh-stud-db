@@ -1,11 +1,16 @@
 import { createConnection } from "mariadb";
 import { computeStats, reducePropertyRecordsToPeople } from "./process";
 import { getbatches } from "./createbatches";
-import fs from "node:fs"
+import fs from "node:fs";
 import { run } from "./mainWorker";
-import { getHighestAvailableIds, findBatchIds, loadBatchOfPropertyRecords, writeComparisonBatch } from "./database";
+import {
+  getHighestAvailableIds,
+  findBatchIds,
+  loadBatchOfPropertyRecords,
+  writeComparisonBatch,
+} from "./database";
 const path = "ids.json";
-const workerpath = './worker.js'
+const workerpath = "./worker.js";
 const credentials = {
   host: "localhost",
   port: 13006,
@@ -14,24 +19,23 @@ const credentials = {
   user: "rksd",
   password: "nJkyj2pOsfUi",
 };
-if (fs.existsSync(path)){
-  fs.rmSync(path, {force:true});
+if (fs.existsSync(path)) {
+  fs.rmSync(path, { force: true });
 }
 //function to read the json file to create as many workers as needed
-function createworker(){
-  let idfile = fs.readFileSync(path,"ascii").split("\n");
-  for (let i = 1; i < idfile.length-1; i++) {
-    const idsstring = idfile[i].substring(1,idfile[i].length -1)
-    const ids:number[] = idsstring.split(",").map((id) => {
-      return parseInt(id)
-    })
-    run(ids,credentials,workerpath)
+function createworker() {
+  let idfile = fs.readFileSync(path, "ascii").split("\n");
+  for (let i = 1; i < idfile.length - 1; i++) {
+    const idsstring = idfile[i].substring(1, idfile[i].length - 1);
+    const ids: number[] = idsstring.split(",").map((id) => {
+      return parseInt(id);
+    });
+    run(ids, credentials, workerpath);
   }
 }
 
 //get (8, 125 ids) batches and then create workers
-getbatches(credentials,8,1024).then(() => createworker());
-
+getbatches(credentials, 8, 1024).then(() => createworker());
 
 /* original
 createConnection(credentials).then((connection) =>

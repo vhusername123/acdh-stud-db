@@ -1,5 +1,3 @@
-import { error } from "node:console";
-
 export class DateRange {
   private readonly millisecondsPerDay = 1000 * 60 * 60 * 24;
 
@@ -60,7 +58,9 @@ export class DateRange {
       this.enddate < otherrange.enddate ? this.enddate : otherrange.enddate;
     return DateRange.calculateLengthInDays(start, end);
   }
-
+  withinDateRange(otherrange:DateRange){
+    return this.equals(this.overlapAsDateRange(otherrange)) ? true : false;
+  }
   overlapAsDateRange(otherrange: DateRange) {
     if (!this.hasOverlap(otherrange)) {
       throw new Error("Ranges do not overlap.");
@@ -78,7 +78,36 @@ export class DateRange {
     );
   }
 
-  unite(otherrange: DateRange) {
+  getBetweenDateRange(otherrange: DateRange){
+    if(this.hasOverlap(otherrange)){
+      throw new Error("Ranges Overlap")
+    }
+    
+    let start:Date
+    let end:Date
+
+    if(this.startdate === otherrange.enddate){
+      start = this.startdate
+      end = this.startdate
+    }else if(this.enddate === otherrange.startdate){
+      start = this.enddate
+      end = this.enddate
+    }else if(this.startdate > otherrange.enddate){
+      start = otherrange.enddate
+      end = this.startdate
+    }else{
+      start = this.enddate
+      end = otherrange.startdate
+    }
+
+    return new DateRange(
+      start,
+      end,
+      DateRange.calculateLengthInDays(start,end)
+    );
+
+  }
+  uniteDateRange(otherrange: DateRange) {
     if(!this.hasOverlap(otherrange)){
       throw new Error("ranges dont overlap.");
     }
@@ -90,15 +119,22 @@ export class DateRange {
       this.enddate > otherrange.enddate 
       ? this.enddate 
       : otherrange.enddate;
-      return new DateRange(
-        start,
-        end,
-        DateRange.calculateLengthInDays(start,end)
-      )
-    return 
+    return new DateRange(
+      start,
+      end,
+      DateRange.calculateLengthInDays(start,end)
+    ) 
   }
-
+  
   rangeLengthDisparity(otherrange: DateRange) {
     return this.getLength() - otherrange.getLength();
+  }
+  equals(otherrange:DateRange): boolean{
+      
+    return this.startdate.getMilliseconds() === otherrange.startdate.getMilliseconds() &&
+      this.enddate.getMilliseconds() === otherrange.enddate.getMilliseconds() &&
+      this.lengthindays === otherrange.lengthindays
+    
+      
   }
 }

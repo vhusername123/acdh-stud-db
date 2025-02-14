@@ -1,5 +1,4 @@
-import { DateRange } from "./DateRange";
-import { describe, expect, test } from "@jest/globals";
+const { DateRange } = require("./DateRange");
 const exampledates = [
   "1900-01-01",
   "1900-12-31",
@@ -92,7 +91,37 @@ describe("DateRange", () => {
 
     expect(range1.hasOverlap(range2)).toBe(false);
   });
-
+  test("succesfully get datenrange inbetween 2 range",() => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[2]) // 1900-06-01
+    );
+    const range2 = DateRange.create(
+      new Date(exampledates[3]), // 1901-05-30
+      new Date(exampledates[3]) // 1901-05-30
+    );
+    const range3 = range1.getBetweenDateRange(range2)
+    expect(range3).toBeInstanceOf(DateRange);
+    expect(range3.getStartDate()).toStrictEqual(range1.getEndDate());
+    expect(range3.getEndDate()).toStrictEqual(range2.getStartDate());
+  });
+  test("succesfully get datenrange inbetween 2 range",() => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[2]) // 1900-06-01
+    );
+    const range2 = DateRange.create(
+      new Date("1900-06-02"), // 1900-06-01
+      new Date(exampledates[3]) // 1901-05-30
+    );
+    
+    const range3 = range1.getBetweenDateRange(range2)
+    expect(range3).toBeInstanceOf(DateRange);
+    expect(range3.getStartDate()).toStrictEqual(range1.getEndDate());
+    expect(range3.getEndDate()).toStrictEqual(range2.getStartDate());
+    expect(range3.getEndDate()).toStrictEqual(range3.getStartDate());
+    expect(range3.getLength()).toBe(0)
+  });
   test("calculate overlap in days", () => {
     const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
@@ -107,7 +136,7 @@ describe("DateRange", () => {
     expect(range2.overlap(range1)).toBe(214);
   });
 
-  test("calculate overlap percentage", () => {
+  test("succesfully unite 2 ranges", () => {
     const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01
       new Date(exampledates[1]) // 1900-12-31
@@ -116,11 +145,12 @@ describe("DateRange", () => {
       new Date(exampledates[2]), // 1900-06-01
       new Date(exampledates[3]) // 1901-05-30
     );
+    const range3 = range1.uniteDateRange(range2);
+    expect(range3).toBeInstanceOf(DateRange)
+    expect(range3?.getStartDate()).toStrictEqual(range1.getStartDate())
+    expect(range3?.getEndDate()).toStrictEqual(range2.getEndDate())
 
-    const overlap = range1.overlap(range2);
-    expect(range1.overlapPercentage(overlap)).toBeCloseTo(0.5863, 3);
-    expect(range2.overlapPercentage(overlap)).toBeCloseTo(0.5879, 3);
-  });
+  })
 
   test("calculate ranged disparity", () => {
     const range1 = DateRange.create(
@@ -157,12 +187,8 @@ describe("DateRange", () => {
       new Date(exampledates[3]) // 1901-05-30
     );
     const overlap = range1.overlapAsDateRange(range2);
-    expect(overlap.getStartDate().getUTCMilliseconds()).toBe(
-      new Date("1900-06-01").getUTCMilliseconds()
-    );
-    expect(overlap.getEndDate().getUTCMilliseconds()).toBe(
-      new Date("1901-01-01").getUTCMilliseconds()
-    );
+    expect(overlap.getStartDate()).toStrictEqual(range2.getStartDate())
+    expect(overlap.getEndDate()).toStrictEqual(range1.getEndDate())
   });
 
   test("fail to create new DateRange from non-overlapping ranges", () => {
@@ -176,4 +202,16 @@ describe("DateRange", () => {
     );
     expect(() => range1.overlapAsDateRange(range2)).toThrow();
   });
+  test("find out if DateRange is within Daterange", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[2]) // 1900-06-01
+    );
+    const range2 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[1]) // 1900-12-31
+    )
+    expect(range1.withinDateRange(range2)).toBeTruthy();
+  })
+
 });

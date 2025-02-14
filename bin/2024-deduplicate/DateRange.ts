@@ -1,3 +1,5 @@
+import { error } from "node:console";
+
 export class DateRange {
   private readonly millisecondsPerDay = 1000 * 60 * 60 * 24;
 
@@ -76,9 +78,24 @@ export class DateRange {
     );
   }
 
-  overlapPercentage(overlap: number) {
-    const a = this.getLength();
-    return a < overlap ? a / overlap : overlap / a;
+  unite(otherrange: DateRange) {
+    if(!this.hasOverlap(otherrange)){
+      throw new Error("ranges dont overlap.");
+    }
+    const start = 
+      this.startdate < otherrange.startdate
+        ? this.startdate
+        : otherrange.startdate;
+    const end =
+      this.enddate > otherrange.enddate 
+      ? this.enddate 
+      : otherrange.enddate;
+      return new DateRange(
+        start,
+        end,
+        DateRange.calculateLengthInDays(start,end)
+      )
+    return 
   }
 
   rangeLengthDisparity(otherrange: DateRange) {

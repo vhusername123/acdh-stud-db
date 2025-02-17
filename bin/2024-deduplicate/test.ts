@@ -151,7 +151,18 @@ describe("DateRange", () => {
     expect(range3?.getEndDate()).toStrictEqual(range2.getEndDate())
 
   })
-
+  test("uniting a range that is inside a range gives bigger range", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[1]) // 1900-12-31
+    );
+    const range2 = DateRange.create(
+      new Date(exampledates[2]), // 1900-06-01
+      new Date(exampledates[1]) // 1901-05-30
+    );
+    const range3 = range1.uniteDateRange(range2);
+    expect(range3).toStrictEqual(range1)
+  });
   test("calculate ranged disparity", () => {
     const range1 = DateRange.create(
       new Date(exampledates[0]), // 1900-01-01

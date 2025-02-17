@@ -4,10 +4,11 @@ export class DateRange {
   private constructor(
     private readonly startdate: Date,
     private readonly enddate: Date,
-    private readonly lengthindays: number
+    private readonly lengthindays: number,
+    private readonly wasASpecificDate: Date|boolean = false,
   ) {}
 
-  static create(date1: Date, date2: Date) {
+  static create(date1: Date, date2: Date, wasASpecificDate:Date|boolean = false) {
     if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
       throw new Error("Invalid date(s) provided.");
     }
@@ -20,7 +21,8 @@ export class DateRange {
     return new DateRange(
       start,
       end,
-      DateRange.calculateLengthInDays(start, end)
+      DateRange.calculateLengthInDays(start, end),
+      wasASpecificDate
     );
   }
 

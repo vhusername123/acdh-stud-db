@@ -1,9 +1,9 @@
 import {Stats} from './types'
 import { DateRange } from "./DateRange";
 //import { DateRangeComparisonStats } from "./types";
-
+type Person = DateRange[];
 const personBirthRanges = (dates:Date[][]) => {
-    const ranges:DateRange[] = []
+    const ranges:Person = []
     dates.forEach((e) => {
         let after = new Date(e[0]),before = new Date(e[1]),originaldate:Date|boolean = false;
         if(after.getTime() == before.getTime()) {
@@ -17,7 +17,7 @@ const personBirthRanges = (dates:Date[][]) => {
     return ranges
 }
 
-function compare(person1:DateRange[], person2:DateRange[]):Stats{
+function compare(person1:Person, person2:Person):Stats{
     let median:number = 0,minimum:number = Infinity,maximum:number = 0,count:number=0;
     let array:number[] = person1.flatMap((n) => {
         const innermean = person2.map((e) => {
@@ -32,7 +32,7 @@ function compare(person1:DateRange[], person2:DateRange[]):Stats{
           })
         return innermean
     })
-    let mean:number = array.reduce((sum,e) => sum+e,0) / count;
+    let mean:number = array.reduce((e,sum) => sum+e,0) / count;
     array.sort((a,b) => a-b)
     minimum = Math.min(...array)
     maximum = Math.max(...array)
@@ -47,25 +47,58 @@ function compare(person1:DateRange[], person2:DateRange[]):Stats{
         count
     ]
 }
-
-const exampledates = [
-    [new Date("1902-01-01"),new Date("1900-01-01")],
-    [new Date("1904-01-01"),new Date("1900-01-01")],
-    [new Date("1901-03-01"),new Date("1900-02-01")],
-    [new Date("1905-01-01"),new Date("1900-01-01")]
-  ];
-const exampledates2 = [
+const exampledates = {
+exampledatesA : [
+    [new Date("1900-03-01"),new Date("1900-03-01")],
+    [new Date("1900-06-04"),new Date("1900-06-04")],
+    [new Date("1900-01-01"),new Date("1900-12-31")],
+    [new Date("1900-05-01"),new Date("1901-02-01")]
+  ],
+exampledatesB : [
+    [new Date("1900-01-01"),new Date("1900-01-01")],
+    [new Date("1900-06-01"),new Date("1900-12-31")],
+  ],
+exampledatesC : [
+    [new Date("1900-01-01"),new Date("1900-12-31")],
+    [new Date("1900-03-01"),new Date("1900-06-01")],
+  ],
+exampledatesD : [
     [new Date("1900-01-01"),new Date("1900-01-01")],
     [new Date("1900-01-01"),new Date("1900-01-01")],
-  ];
-
-const testperson:DateRange[] = personBirthRanges(exampledates)
-const testperson2:DateRange[] = personBirthRanges(exampledates2)
-
-
-console.log(testperson)
-console.log(testperson2)
-console.log(compare(testperson,testperson2))
-console.log(compare(testperson2,testperson))
+  ]
+}
+type Persons = {
+    personname: String,
+    range: Person
+}[]
+const persons:Persons = 
+[
+    {
+        personname: "PersonA",
+        range: personBirthRanges(exampledates.exampledatesA)
+    },
+    {
+        personname: "PersonB",
+        range: personBirthRanges(exampledates.exampledatesB)
+    },
+    {
+        personname: "PersonC",
+        range: personBirthRanges(exampledates.exampledatesC)
+    },
+    {
+        personname: "PersonD",
+        range: personBirthRanges(exampledates.exampledatesD)
+    }
+]
+let c = 0;
+for(let i = 0; i< persons.length;i++){
+    for(let j = i+1; j< persons.length;j++){
+            console.log([
+                persons[i].personname,
+                persons[j].personname,
+                compare(persons[i].range,persons[j].range)
+                ])
+    }
+}
 /*
 */

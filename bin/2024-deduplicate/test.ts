@@ -213,5 +213,56 @@ describe("DateRange", () => {
     )
     expect(range1.withinDateRange(range2)).toBeTruthy();
   })
-
+  test("find out which DateRange comes first", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[2]) // 1900-06-01
+    )
+    const range2 = DateRange.create(
+      new Date(exampledates[2]),
+      new Date(exampledates[1]) // 1900-12-31
+    )
+    expect(range1.equals(range2.sortDateRange(range1)[0])).toBeTruthy();
+  })
+  test("find out which DateRange comes first", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date(exampledates[2]) // 1900-06-01
+    )
+    const range2 = DateRange.create(
+      new Date(exampledates[2]),
+      new Date(exampledates[1]) // 1900-12-31
+    )
+    expect(range2.equals(range2.sortDateRange(range1)[0])).toBeFalsy();
+  })
+  test("find out that daterange is inbetween", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[1]), // 1900-12-31
+      new Date(exampledates[2]) // 1900-06-01
+    )
+    const range2 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date("1900-04-03")
+    )
+    const range3 = DateRange.create(
+      new Date(exampledates[3]), // 1901-05-30
+      new Date(exampledates[3]) // 1901-05-30
+    );
+    expect(range1.inbetween(range2,range3)).toBeTruthy()
+  });
+  test("find out that daterange is not inbetween", () => {
+    const range1 = DateRange.create(
+      new Date(exampledates[1]), // 1900-12-31
+      new Date(exampledates[2]) // 1900-06-01
+    )
+    const range2 = DateRange.create(
+      new Date(exampledates[0]), // 1900-01-01
+      new Date("1900-04-03")
+    )
+    const range3 = DateRange.create(
+      new Date(exampledates[3]), // 1901-05-30
+      new Date(exampledates[3]) // 1901-05-30
+    );
+    expect(range3.inbetween(range1,range2)).toBeFalsy()
+  });
 });

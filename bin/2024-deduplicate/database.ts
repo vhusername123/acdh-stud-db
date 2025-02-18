@@ -44,9 +44,13 @@ export const findBatchIds: FindBatchIds = (
 };
 
 type GetHighestAvailableIds = (
-  connection: Connection
+  connection: Connection,
+  table?: string
 ) => Promise<[number, number, number]>;
-export const getHighestAvailableIds: GetHighestAvailableIds = (connection) =>
+export const getHighestAvailableIds: GetHighestAvailableIds = (
+  connection,
+  table = "student_similarity_graph"
+) =>
   connection
     .query({
       rowsAsArray: true,
@@ -55,7 +59,7 @@ export const getHighestAvailableIds: GetHighestAvailableIds = (connection) =>
       sql:
         "(select max(person_id), 0 from student_identity)" +
         " union " +
-        "(select id_low, id_high from student_similarity_graph order by id_low desc, id_high desc limit 1)" +
+        `(select id_low, id_high from ${table} order by id_low desc, id_high desc limit 1)` +
         " union " +
         "(select 0, 0 from dual)",
     })

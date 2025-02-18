@@ -6,11 +6,12 @@ import { findBatchIds, getHighestAvailableIds } from "./database";
 export function getbatches(
   credentials: {},
   batches: number,
-  BATCH_SIZE: number = 10
+  BATCH_SIZE: number = 10,
+  table: string = "student_similarity_graph"
 ) {
   return new Promise<string>((resolve) =>
     createConnection(credentials).then((connection) =>
-      getHighestAvailableIds(connection)
+      getHighestAvailableIds(connection, table)
         .then((limits: [number, number, number]) =>
           findBatchIds(connection, limits, BATCH_SIZE)
         )

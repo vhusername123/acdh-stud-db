@@ -1,8 +1,8 @@
 import { Worker } from "worker_threads";
 
 //internal function to create worker
-function runService(workerData: [number[], {}], path: string) {
-  return new Promise((resolve, reject) => {
+function runService<T>(workerData: [number[], {}], path: string) {
+  return new Promise<T>((resolve, reject) => {
     const worker = new Worker(path, { workerData });
     worker.on("message", resolve);
     worker.on("error", reject);
@@ -16,10 +16,10 @@ function runService(workerData: [number[], {}], path: string) {
 }
 
 //function to start workers in sequence
-export function promiseWorker(
+export function promiseWorker<T>(
   workerData: number[],
   credentials: {},
   workerpath: string
 ) {
-  return runService([workerData, credentials], workerpath);
+  return runService<T>([workerData, credentials], workerpath);
 }

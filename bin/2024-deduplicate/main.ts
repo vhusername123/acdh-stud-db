@@ -1,6 +1,7 @@
 import { getbatches } from "./createbatches";
 import fs from "node:fs";
 import { promiseWorker } from "./mainWorker";
+import { ComparisonWorkers } from "./types";
 const path = "ids.json";
 const workerpath = "./worker.js";
 const credentials = {
@@ -23,11 +24,18 @@ function createworker() {
     const ids: number[] = idsstring.split(",").map((id) => {
       return parseInt(id);
     });
-    workers.push(promiseWorker(ids, credentials, workerpath));
+    workers.push(
+      promiseWorker<ComparisonWorkers>(ids, credentials, workerpath)
+    );
   }
-  
-  Promise.all(workers).then((test) => {
-    test.forEach((e) => console.log(e))
+  Promise.allSettled(workers).then((workerResults) => {
+    workerResults.forEach((e) => {
+      if (e.status === "rejected") {
+        console.error(e.reason);
+      } else {
+        console.log(e.value);
+      }
+    });
   });
 }
 

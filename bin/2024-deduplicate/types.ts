@@ -40,3 +40,10 @@ export type Comparison = {
   idHigh: number;
   stats: Record<Property, Stats>;
 };
+export type ComparisonWorkers = {
+  done: boolean;
+  value: {
+    ids: number[];
+  };
+  time?: number;
+};

@@ -13,17 +13,16 @@ createConnection(credentials).then((connection) =>
     .then(computeStats)
     .then((comparisons) => writeComparisonBatch(connection, comparisons))
     .then(() => {
-      console.log(
-        ids[0],
-        "/",
-        ids[1],
-        "..",
-        ids[ids.length - 1] +
-          " done: " +
-          (new Date().getTime() - startDate.getTime()) / 1000 +
-          " seconds"
-      );
-      parentPort?.postMessage("done");
+      parentPort?.postMessage({
+        done: true,
+        value: {
+          ids: ids,
+        },
+        time: (new Date().getTime() - startDate.getTime()) / 1000,
+      });
       connection.end();
+    })
+    .catch(() => {
+      throw { done: false, value: { ids: ids } };
     })
 );

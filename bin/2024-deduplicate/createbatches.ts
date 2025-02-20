@@ -15,12 +15,14 @@ export function getbatches(
         .then((limits: [number, number, number]) =>
           findBatchIds(connection, limits, BATCH_SIZE)
         )
-        .then((ids: string | any[]) => {
-          console.log(ids[0], "/", ids[1], "..", ids[ids.length - 1]);
-          fs.writeFileSync("ids.json", JSON.stringify(ids) + "\n", {
-            flag: "a+",
-          });
-          return ids;
+        .then((ids) => {
+          fsPromises.readFile("ids.json", "utf-8").then((file: string) => {
+            const idArray:number[][] = JSON.parse(file)
+            idArray.push(ids)
+            fs.writeFileSync("ids.json", JSON.stringify(idArray), {
+              flag: "w",
+            });
+          })
         })
         .then(() => loopinggetnextavaialbleIds(connection, batches, BATCH_SIZE))
         .then(() => {
@@ -41,9 +43,13 @@ async function loopinggetnextavaialbleIds(
       .then((limits) => findBatchIds(connection, limits, BATCH_SIZE))
       .then((ids) => {
         console.log(ids[0], "/", ids[1], "..", ids[ids.length - 1]);
-        fs.writeFileSync("ids.json", JSON.stringify(ids) + "\n", {
-          flag: "a+",
-        });
+        fsPromises.readFile("ids.json", "utf-8").then((file: string) => {
+          const idArray:number[][] = JSON.parse(file)
+          idArray.push(ids)
+          fs.writeFileSync("ids.json", JSON.stringify(idArray), {
+            flag: "w",
+          });
+        })
         return ids;
       });
   }
@@ -51,17 +57,15 @@ async function loopinggetnextavaialbleIds(
 
 type GetNextAvailableIds = () => Promise<[number, number, number]>;
 const getnextavailableIds: GetNextAvailableIds = () =>
-  fsPromises
-    .readFile("ids.json", "ascii")
-    .then((file) => {
-      const filebyLines = file.split("\n");
-      const lastline = filebyLines[filebyLines.length - 2];
-      let length = lastline.length;
-      let line = lastline.substring(1, length - 1).split(",");
-      return [[filebyLines[0]], [line[0], line[line.length - 1]]];
+  fsPromises.readFile("ids.json", "utf-8")
+      .then((file: string) => {
+      const idArray:number[][] = JSON.parse(file)
+      const lastIDs = idArray[idArray.length -1];
+      const returntype: [[number], [number, number]] = [[idArray[0][0]], [lastIDs[0], lastIDs.slice(-1)[0]]]; 
+      return returntype;
     })
     .then(
-      ([[end], [low, high]]) =>
+      ([[end], [low, high]]: [[number], [number, number]]) =>
         [low || 0, high || 0, end || 0].map((n) => +n) as [
           number,
           number,

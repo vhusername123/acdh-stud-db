@@ -14,7 +14,7 @@ export const findBatchIds: FindBatchIds = (
 ) => {
   const [left, right, max] = highestAvailableIds;
   if (!fs.existsSync("ids.json")) {
-    fs.writeFileSync("ids.json", '{ "max": ' + max + ", }" + "\n");
+    fs.writeFileSync("ids.json", JSON.stringify([[max]]));
   }
   return connection
     .query(

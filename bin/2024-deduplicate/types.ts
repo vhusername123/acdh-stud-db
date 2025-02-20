@@ -47,3 +47,17 @@ export type ComparisonWorkers = {
   };
   time?: number;
 };
+
+export type Person2 = IdRecord & Partial<Record<"bornranges", [[string, string]]>>;
+export type DatePropRecord = IdRecord & {
+  id: string;
+  born_on_or_after: string;
+  born_on_or_before: string;
+};
+export type DateRangeComparison = {
+  idLow: number;
+  idHigh: number;
+  stats: Stats;
+}
+
+

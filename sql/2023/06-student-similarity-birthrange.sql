@@ -3,6 +3,7 @@ CREATE TABLE student_similarity_birthrange
 (
     id_low   bigint unsigned not null,
     id_high  bigint unsigned not null,
+    property varchar(16)    not null,
     mean     double unsigned not null default 0,
     median   double unsigned not null default 0,
     min      double unsigned not null default 0,

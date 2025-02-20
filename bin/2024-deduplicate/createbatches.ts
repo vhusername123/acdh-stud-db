@@ -1,5 +1,4 @@
 import { createConnection, Connection } from "mariadb";
-import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import { findBatchIds, getHighestAvailableIds } from "./database";
 
@@ -13,6 +12,7 @@ export async function getbatches(
   try {
     const limits = await getHighestAvailableIds(connection, table);
     const ids = await findBatchIds(connection, limits, BATCH_SIZE);
+    console.log(ids[0], "/", ids[1], "..", ids[ids.length - 1]);
     await updateIdsFile(ids);
     await loopinggetnextavaialbleIds(connection, batches, BATCH_SIZE);
     return "success";

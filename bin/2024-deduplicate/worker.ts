@@ -22,7 +22,7 @@ createConnection(credentials).then((connection) =>
       });
       connection.end();
     })
-    .catch(() => {
-      throw { done: false, value: { ids: ids } };
+    .catch((error) => {
+      throw Error(error + `Failed to process ${ids[0]} to ${ids[ids.length - 1]}`);
     })
 );

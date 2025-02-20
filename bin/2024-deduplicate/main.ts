@@ -17,30 +17,29 @@ if (fs.existsSync(path)) {
 }
 //function to read the json file to create as many workers as needed
 function createworker() {
-  let idfile = fs.readFileSync(path, "ascii").split("\n");
-  const workers = [];
-  for (let i = 1; i < idfile.length - 1; i++) {
-    const idsstring = idfile[i].substring(1, idfile[i].length - 1);
-    const ids: number[] = idsstring.split(",").map((id) => {
-      return parseInt(id);
-    });
-    workers.push(
+  let idfile = fs.readFileSync(path, "utf-8");
+  const id:number[][] = JSON.parse(idfile);
+  const workers:any[] = [];
+  for (let i = 1; i < id.length - 1; i++) {
+      const id:number[][] = JSON.parse(idfile);
+      const ids = id[i];
+      workers.push(
       promiseWorker<ComparisonWorkers>(ids, credentials, workerpath)
     );
   }
   Promise.allSettled(workers).then((workerResults) => {
     workerResults.forEach((e) => {
       if (e.status === "rejected") {
-        console.error(e.reason);
+        console.error(e.reason.value.value.ids[0], "/", e.reason.value.value.ids[1], "failed");
       } else {
-        console.log(e.value);
+        console.log(e.value.value.ids[0], "/", e.value.value.ids[1], "done in", e.value.time, "seconds");
       }
     });
   });
 }
 
 //get (8, 125 ids) batches and then create workers
-getbatches(credentials, 12, 10).then(() => createworker());
+getbatches(credentials, 12, 1024).then(() => createworker());
 
 /* original
 createConnection(credentials).then((connection) =>
